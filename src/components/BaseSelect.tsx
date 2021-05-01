@@ -11,7 +11,7 @@ import { selectCurrency } from '../store/currencySlice';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     formControl: {
-      margin: theme.spacing(1),
+      marginBottom: theme.spacing(2),
       minWidth: 130,
     },
     selectEmpty: {
