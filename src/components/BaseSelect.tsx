@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
@@ -7,6 +7,9 @@ import { Box } from '@material-ui/core';
 import { useAppSelector } from '../store/hooks';
 import { selectCurrency } from '../store/currencySlice';
 
+interface BaseSelectProps {
+  changeBaseCur: (curr: string) => void;
+}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const BaseSelect: React.FC = () => {
+const BaseSelect: React.FC<BaseSelectProps> = ({changeBaseCur}) => {
   const classes = useStyles();
   const [state, setState] = React.useState<{
     currency: string;
@@ -30,6 +33,12 @@ const BaseSelect: React.FC = () => {
     name: 'currency',
   });
   const currency = useAppSelector(selectCurrency);
+
+  useEffect(() => {
+    if (state.currency) {
+      changeBaseCur(state.currency);
+    }
+  }, [state])
 
   const handleChange = (
     event: React.ChangeEvent<{ name?: string; value: unknown }>
@@ -66,10 +75,10 @@ const BaseSelect: React.FC = () => {
             id: 'currency',
           }}
         >
-          <option value={currency.baseCurrency.id}>{currency.baseCurrency.name}</option>
+          <option value={currency.baseCurrency.id}>{currency.baseCurrency.id}</option>
           {renderOptions().map((el, key) => (
             <option value={el.currencyId} key={key}>
-              {el.name}
+              {el.currencyId}
             </option>
           ))}
         </Select>

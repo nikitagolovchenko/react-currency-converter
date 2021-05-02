@@ -12,3 +12,8 @@ interface IRequestCurrency {
   from: string;
   result: number | null;
 }
+
+interface Icurrencies {
+  base: string;
+  currencies: string[];
+}
