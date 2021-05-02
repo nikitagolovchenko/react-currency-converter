@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import Select from '@material-ui/core/Select';
 import { Box } from '@material-ui/core';
 import { useAppSelector } from '../store/hooks';
@@ -23,32 +25,20 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const BaseSelect: React.FC<BaseSelectProps> = ({changeBaseCur}) => {
+const BaseSelect: React.FC<BaseSelectProps> = ({ changeBaseCur }) => {
   const classes = useStyles();
-  const [state, setState] = React.useState<{
-    currency: string;
-    name: string;
-  }>({
-    currency: '',
-    name: 'currency',
-  });
   const currency = useAppSelector(selectCurrency);
+  const [value, setValue] = React.useState<any | null>({
+    currencyId: currency.baseCurrency.id
+  });
+  const [inputValue, setInputValue] = React.useState('');
 
   useEffect(() => {
-    if (state.currency) {
-      changeBaseCur(state.currency);
+    if (value) {
+      changeBaseCur(value.currencyId);
     }
-  }, [state])
+  }, [value]);
 
-  const handleChange = (
-    event: React.ChangeEvent<{ name?: string; value: unknown }>
-  ) => {
-    const name = event.target.name as keyof typeof state;
-    setState({
-      ...state,
-      [name]: event.target.value,
-    });
-  };
 
   const renderOptions = () => {
     let arr: any[] = [];
@@ -63,26 +53,23 @@ const BaseSelect: React.FC<BaseSelectProps> = ({changeBaseCur}) => {
 
   return (
     <Box display='flex' justifyContent='flex-end' mb={2}>
-      <FormControl variant='outlined' className={classes.formControl}>
-        <InputLabel htmlFor='outlined-age-native-simple'>Currency</InputLabel>
-        <Select
-          native
-          value={state.currency}
-          onChange={handleChange}
-          label='Currency'
-          inputProps={{
-            name: 'currency',
-            id: 'currency',
-          }}
-        >
-          <option value={currency.baseCurrency.id}>{currency.baseCurrency.id}</option>
-          {renderOptions().map((el, key) => (
-            <option value={el.currencyId} key={key}>
-              {el.currencyId}
-            </option>
-          ))}
-        </Select>
-      </FormControl>
+      <Autocomplete
+        id='select-currency'
+        options={renderOptions()}
+        getOptionLabel={(option: any) => option.currencyId}
+        style={{ width: 300 }}
+        value={value}
+        onChange={(event: any, newValue: string | null) => {
+          setValue(newValue);
+        }}
+        inputValue={inputValue}
+        onInputChange={(event, newInputValue) => {
+          setInputValue(newInputValue);
+        }}
+        renderInput={(params: any) => (
+          <TextField {...params} label='box' variant='outlined' />
+        )}
+      />
     </Box>
   );
 };

@@ -12,7 +12,6 @@ export interface CurrencyState {
   currency: IRequestCurrency;
   currencies: string[];
   selectedCurrencies: string[];
-  error: any;
 }
 
 const initialState: CurrencyState = {
@@ -29,7 +28,6 @@ const initialState: CurrencyState = {
   },
   currencies: [],
   selectedCurrencies: ['USD', 'EUR'],
-  error: null
 };
 
 export const getCountries = createAsyncThunk(
@@ -81,11 +79,9 @@ export const currencySlice = createSlice({
       .addCase(getCountries.fulfilled, (state, action) => {
         state.loading = false;
         state.countries = action.payload;
-        state.error = null;
       })
-      .addCase(getCountries.rejected, (state, action) => {
+      .addCase(getCountries.rejected, (state) => {
         state.loading = false;
-        state.error = action.payload;
       })
       .addCase(getCurrency.pending, (state) => {
         state.loading = true;
@@ -93,11 +89,9 @@ export const currencySlice = createSlice({
       .addCase(getCurrency.fulfilled, (state, action) => {
         state.loading = false;
         state.currency = action.payload;
-        state.error = null;
       })
-      .addCase(getCurrency.rejected, (state, action) => {
+      .addCase(getCurrency.rejected, (state) => {
         state.loading = false;
-        state.error = action.payload;
       })
       .addCase(getCurrencies.pending, (state) => {
         state.loading = true;
@@ -105,11 +99,9 @@ export const currencySlice = createSlice({
       .addCase(getCurrencies.fulfilled, (state, action) => {
         state.loading = false;
         state.currencies = action.payload;
-        state.error = null;
       })
-      .addCase(getCurrencies.rejected, (state, action) => {
+      .addCase(getCurrencies.rejected, (state) => {
         state.loading = false;
-        state.error = action.payload;
       })
   },
 });
