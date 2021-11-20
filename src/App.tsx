@@ -16,11 +16,11 @@ const App: React.FC = () => {
 
   useEffect(() => {
     dispatch(getCountries());
-  }, [])
+  }, []);
 
   return (
     <>
-      <Router>
+      <Router basename={process.env.PUBLIC_URL}>
         <Switch>
           <Route path='/' component={HomePage} exact />
           <Route path='/currencies' component={СurrenciesPage} exact />
